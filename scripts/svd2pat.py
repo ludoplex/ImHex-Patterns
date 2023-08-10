@@ -55,7 +55,7 @@ for peripheral in svd.find("peripherals"):
                 pass
             elif register_offset - prev_offset > 4:
                 code += f"    padding[{register_offset - prev_offset - 4}];\n"
-            elif (register_offset - prev_offset != 0) and (register_offset - prev_offset != 4):
+            elif register_offset - prev_offset not in [0, 4]:
                 print(f"Overlapping register {register_name}!")
                 exit()
 
@@ -70,5 +70,5 @@ for peripheral in svd.find("peripherals"):
     code += f"{peripheral_name}_t {peripheral_name} @ 0x{peripheral_address:08X};\n\n"
 
 # Write generated code to a file
-with open(sys.argv[1] + ".pat", "w") as file:
+with open(f"{sys.argv[1]}.pat", "w") as file:
     file.write(code)

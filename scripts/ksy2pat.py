@@ -80,17 +80,15 @@ def handle_instances(instances):
 
 
 def handle_seq(seq):
-    result = ""
-
     is_bitfield = False
     lines = []
 
+    content_check = ""
     for entry in seq:
         name = entry["id"]
         entry_type = ""
         array_size = ""
         bitfield_field_size = ""
-        content_check = ""
         docs = ""
 
         if "doc" in entry:
@@ -128,16 +126,13 @@ def handle_seq(seq):
             entry_type = "double"
         else:
             entry_type = fixTypeName(entry_type)
-        
+
         if "contents" in entry:
             if isinstance(entry["contents"], str):
                 entry_type = f"type::Magic<\"{entry['contents']}\">"
             else:
                 array_size = len(entry["contents"])
-                encoded_string = ""
-                for char in entry["contents"]:
-                    encoded_string += f"\\x{char:02X}"
-
+                encoded_string = "".join(f"\\x{char:02X}" for char in entry["contents"])
                 entry_type = f"type::Magic<\"{encoded_string}\">"
         elif "size" in entry:
             array_size = entry["size"]
@@ -153,7 +148,7 @@ def handle_seq(seq):
 
         if "if" in entry:
             new_line += f"    if ({entry['if']})\n    "
-        
+
         if array_size != "":
             new_line += f"    {entry_type} {name}[{array_size}];"
         elif bitfield_field_size != "":
@@ -166,9 +161,7 @@ def handle_seq(seq):
 
         lines.append(new_line)
 
-    for line in lines:
-        result += line + "\n"
-
+    result = "".join(line + "\n" for line in lines)
     return (is_bitfield, result)
 
 def generate_imhex_pattern(data):

@@ -21,10 +21,10 @@ with open(f"{fileName}.tbl", "w", encoding="utf-8") as outFile:
                             print(f"{index:02X}={lut[number]}", file=outFile)
                         elif number == 0x7F:
                             print(f"{index:02X}=DEL", file=outFile)
-                        else:
-                            if chr(number) == chr(0xFFFD):
-                                raise Exception
+                        elif chr(number) == chr(0xFFFD):
+                            raise Exception
 
+                        else:
                             print(f"{index:02X}={chr(number)}", file=outFile)
                     except Exception:
                         print(f"{index:02X}", file=outFile)
