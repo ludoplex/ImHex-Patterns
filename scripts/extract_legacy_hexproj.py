@@ -20,12 +20,10 @@ def main():
 
         extractData(projectName, jsonData, "dataProcessor", "hexnode")
         extractData(projectName, jsonData, "pattern", "hexpat")
-        
+
         if "bookmarks" in jsonData:
             with open(f"./{projectName}.hexbm", mode="w", encoding="utf-8") as output:
-                jsonOutput = {}
-                jsonOutput["bookmarks"] = jsonData["bookmarks"]
-
+                jsonOutput = {"bookmarks": jsonData["bookmarks"]}
                 output.write(json.dumps(jsonOutput, indent=4))
 
         if "filePath" in jsonData:
